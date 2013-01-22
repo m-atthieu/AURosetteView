@@ -270,6 +270,8 @@ CGFloat const kApertureAngle = 53.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+#define kExpandDuration 0.2f
+#define kExpandGroupDuration 0.1f
 - (void)expand {
     CGFloat angle_ = DegreesToRadians(kApertureAngle);
     
@@ -288,7 +290,7 @@ CGFloat const kApertureAngle = 53.0f;
         [leafAnimation setToValue:[NSValue valueWithCATransform3D:transform]];
         [leafAnimation setFillMode:kCAFillModeForwards]; 
         [leafAnimation setRemovedOnCompletion: NO];
-        [leafAnimation setDuration:0.6f];
+        [leafAnimation setDuration: kExpandDuration];
         
         layer = [_leavesLayers objectAtIndex:i];
         [layer addAnimation:leafAnimation forKey:@"expand"];
@@ -310,8 +312,8 @@ CGFloat const kApertureAngle = 53.0f;
         [group setAnimations:[NSArray arrayWithObjects:scaleImageAnimation, positionImageAnimation, nil]];
         [group setFillMode:kCAFillModeForwards]; 
         [group setRemovedOnCompletion: NO];
-        [group setDuration:0.3f];
-        [group setBeginTime:CACurrentMediaTime () + 0.27f];
+        [group setDuration: kExpandGroupDuration];
+        [group setBeginTime:CACurrentMediaTime () + (kExpandGroupDuration)];
         
         layer = [_imagesLayers objectAtIndex:i];
         [layer addAnimation:group forKey:@"show"];
@@ -322,6 +324,8 @@ CGFloat const kApertureAngle = 53.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+#define kFoldDuration 0.2f
+#define kFoldGroupDuration 0.2f
 - (void)fold {
     
     [CATransaction begin];
@@ -337,7 +341,7 @@ CGFloat const kApertureAngle = 53.0f;
         [leafAnimation setToValue:[NSValue valueWithCATransform3D:transform]];
         [leafAnimation setFillMode:kCAFillModeForwards]; 
         [leafAnimation setRemovedOnCompletion: NO];
-        [leafAnimation setDuration:0.5f];
+        [leafAnimation setDuration: kFoldDuration];
         [leafAnimation setBeginTime:CACurrentMediaTime () + 0.1f];
         
         CALayer* layer = [_leavesLayers objectAtIndex:i];
@@ -360,7 +364,7 @@ CGFloat const kApertureAngle = 53.0f;
         [group setAnimations:[NSArray arrayWithObjects:scaleImageAnimation, positionImageAnimation, nil]];
         [group setFillMode:kCAFillModeForwards]; 
         [group setRemovedOnCompletion: NO];
-        [group setDuration:0.3f];
+        [group setDuration: kFoldGroupDuration];
         
         layer = [_imagesLayers objectAtIndex:i];
         [layer addAnimation:group forKey:@"hide"];

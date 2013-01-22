@@ -15,6 +15,6 @@
 @property (nonatomic, strong) UIImage* normalImage;
 @property (nonatomic, strong) UIImage* highlightedImage;
 
-- (id)initWithNormalImage:(UIImage *)normalImage highlightedImage:(UIImage *)highlightedImage target:(id)target action:(SEL)action;
+- (id) initWithNormalImage: (UIImage*) normalImage highlightedImage: (UIImage *) highlightedImage target:(id) target action:(SEL)action;
 
 @end
