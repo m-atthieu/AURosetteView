@@ -18,14 +18,17 @@
     
     NSMutableArray* _leavesLayers;
     NSMutableArray* _imagesLayers;
-    
     UITapGestureRecognizer* _tapGestureRecognizer;
 }
 
 /*
  * Keep center button used to fire expand/fold animation.
  */
-@property (nonatomic, strong) UIButton* wheelButton;    
+@property (nonatomic, strong) UIButton* wheelButton;
+@property (nonatomic, retain) NSBundle* bundle;
+@property (nonatomic, retain) NSString* onImagePath;
+@property (nonatomic, retain) NSString* offImagePath;
+@property (nonatomic, retain) NSString* leafImagePath;
 
 /*
  * Default NO.
@@ -33,6 +36,7 @@
 @property (nonatomic, assign, getter = isOn) BOOL on;
 
 - (id)initWithItems:(NSArray*)items;
+- (id) initWithItems: (NSArray*) items bundle: (NSBundle*) bundle;
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 - (void)toggleWithAnimation:(BOOL)animated;

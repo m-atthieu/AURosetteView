@@ -11,63 +11,101 @@
 #import <CoreImage/CoreImage.h>
 
 @interface AURosetteView (Private)
-- (void)wheelButtonAction:(id)sender;
-- (void)tapAction:(UITapGestureRecognizer*)tapGestureRecognizer;
-- (void)addLeaves;
-- (void)addImages;
-- (void)expand;
-- (void)fold;
+- (void) wheelButtonAction: (id) sender;
+- (void) tapAction: (UITapGestureRecognizer*) tapGestureRecognizer;
+- (void) addLeaves;
+- (void) addImages;
+- (void) expand;
+- (void) fold;
 @end
 
 @implementation AURosetteView
 @synthesize on = _on;
 @synthesize wheelButton = _wheelButton;
+@synthesize bundle = _bundle;
+@synthesize offImagePath = _offImagePath,
+    onImagePath = _onImagePath,
+    leafImagePath = _leafImagePath;
 
-#define kOnImageName @"/Bundle.bundle/Resources/rosetta_on.png"
-#define kOffImageName @"/Bundle.bundle/Resources/rosetta_off.png"
-#define kLeafImageName @"/Bundle.bundle/Resources/rosetta_leaf.png"
+//#define kOnImageName @"/Bundle.bundle/Resources/rosetta_on.png"
+//#define kOffImageName @"/Bundle.bundle/Resources/rosetta_off.png"
+//#define kLeafImageName @"/Bundle.bundle/Resources/rosetta_leaf.png"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (id)initWithItems:(NSArray*)items {
-    self = [super initWithFrame:CGRectMake(0.0f, 0.0f, 199.0f, 199.0f)];
+- (id)initWithItems: (NSArray*) items {
+    self = [super initWithFrame: CGRectMake(0.0f, 0.0f, 199.0f, 199.0f)];
     if (self) {
         _items = items;
-
-        // set default
-        _on = NO;
-        
-        // recognize taps when wheel is expanded
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self 
-                                                                        action:@selector(tapAction:)];
-        _tapGestureRecognizer.delegate = self;
-        [self addGestureRecognizer:_tapGestureRecognizer];
-        
-        // array containing leaves layers
-        _leavesLayers = [NSMutableArray new];
-        _imagesLayers = [NSMutableArray new];
-        
-        // add leaves layers
-        [self addLeaves];
-        
-        // add images
-        [self addImages];
-        
-        // get default off image
-        UIImage* image = [UIImage imageNamed:kOffImageName];
-        
-        // add button
-        _wheelButton = [[UIButton alloc] init];
-        [_wheelButton setImage:image forState:UIControlStateNormal];
-        [self addSubview:_wheelButton];
-        
-        // add target
-        [_wheelButton addTarget:self action:@selector(wheelButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        
-        // Others settings
-        [self setExclusiveTouch:NO];
-        [self setBackgroundColor:[UIColor clearColor]];
-}
+        NSString* bundlePath = [[NSBundle mainBundle] pathForResource: @"Bundle" ofType: @"bundle"];
+        [self setBundle: [NSBundle bundleWithPath: bundlePath]];
+        [self setup];
+    }
     return self;
+}
+
+- (id) initWithItems: (NSArray*) items bundle: (NSBundle*) bundle
+{
+    //self = [self initWithItems: items];
+    self = [super initWithFrame: CGRectMake(0.0f, 0.0f, 199.0f, 199.0f)];
+    if(self){
+        _items = items;
+        [self setBundle: bundle];
+        [self setup];
+    }
+    return self;
+}
+
+#pragma mark - Setup
+
+- (void) setup
+{
+    // set default
+    _on = NO;
+
+    [self setupImages];
+    
+    [self setupGestureRecognizure];
+    // array containing leaves layers
+    _leavesLayers = [NSMutableArray new];
+    _imagesLayers = [NSMutableArray new];
+    // add leaves layers
+    [self addLeaves];
+    // add images
+    [self addImages];
+    [self setupWheelButton];
+    
+    // Others settings
+    [self setExclusiveTouch:NO];
+    [self setBackgroundColor:[UIColor clearColor]];
+}
+
+- (void) setupGestureRecognizure
+{
+    // recognize taps when wheel is expanded
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                    action:@selector(tapAction:)];
+    _tapGestureRecognizer.delegate = self;
+    [self addGestureRecognizer:_tapGestureRecognizer];
+}
+
+- (void) setupWheelButton
+{
+    // get default off image
+    UIImage* image = [UIImage imageWithContentsOfFile: _offImagePath];
+    // add button
+    _wheelButton = [[UIButton alloc] init];
+    [_wheelButton setImage:image forState: UIControlStateNormal];
+    [self addSubview:_wheelButton];
+    
+    // add target
+    [_wheelButton addTarget:self action:@selector(wheelButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void) setupImages
+{
+    [self setOffImagePath: [_bundle pathForResource: @"rosetta_off" ofType: @"png"]];
+    [self setOnImagePath: [_bundle pathForResource: @"rosetta_on" ofType: @"png"]];
+    [self setLeafImagePath: [_bundle pathForResource: @"rosetta_leaf" ofType: @"png"]];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +126,7 @@
     
     if (_on) {
         // get default on image
-        UIImage* image = [UIImage imageNamed:kOnImageName];
+        UIImage* image = [UIImage imageWithContentsOfFile: _onImagePath];
         [_wheelButton setImage:image forState:UIControlStateNormal];
         
         // expand rosette
@@ -98,7 +136,7 @@
         _tapGestureRecognizer.enabled = YES;        
     } else {
         // get default off image
-        UIImage* image = [UIImage imageNamed:kOffImageName];
+        UIImage* image = [UIImage imageWithContentsOfFile: _offImagePath];
         [_wheelButton setImage:image forState:UIControlStateNormal];
         
         // fold rosette
@@ -195,7 +233,7 @@ CGFloat const kApertureAngle = 53.0f;
     // iterate all images
     [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         // get image
-        UIImage *image = [UIImage imageNamed:kLeafImageName];
+        UIImage *image = [UIImage imageWithContentsOfFile: _leafImagePath];
         
         // create new layer
         CALayer* layer = [CALayer layer];
@@ -264,7 +302,7 @@ CGFloat const kApertureAngle = 53.0f;
         
         CGPoint point = [tapGestureRecognizer locationInView:self];
         if (CGPathContainsPoint(bezierPath.CGPath, NULL, point, NO)) {
-            [obj.target performSelector:obj.action withObject:self];
+            [obj.target performSelector: obj.action withObject: self];
         }
     }];
 }
