@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSString* onImagePath;
 @property (nonatomic, retain) NSString* offImagePath;
 @property (nonatomic, retain) NSString* leafImagePath;
+@property (nonatomic, assign) id<AURosetteViewDelegate> delegate;
 
 /*
  * Default NO.
@@ -40,4 +41,11 @@
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 - (void)toggleWithAnimation:(BOOL)animated;
+@end
+
+@protocol AURosetteViewDelegate <NSObject>
+@optional
+- (void) rosetteDidReceiveTap: (AURosetteView*) rosetteView;
+- (void) rosetteDidFold: (AURosetteView*) rosetteView;
+- (void) rosetteDidExpand: (AURosetteView*) rosetteView;
 @end

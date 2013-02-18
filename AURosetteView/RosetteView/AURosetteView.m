@@ -26,6 +26,7 @@
 @synthesize offImagePath = _offImagePath,
     onImagePath = _onImagePath,
     leafImagePath = _leafImagePath;
+@synthesize delegate;
 
 //#define kOnImageName @"/Bundle.bundle/Resources/rosetta_on.png"
 //#define kOffImageName @"/Bundle.bundle/Resources/rosetta_off.png"
@@ -39,6 +40,7 @@
         NSString* bundlePath = [[NSBundle mainBundle] pathForResource: @"Bundle" ofType: @"bundle"];
         [self setBundle: [NSBundle bundleWithPath: bundlePath]];
         [self setup];
+        [self setDelegate: nil];
     }
     return self;
 }
@@ -51,6 +53,7 @@
         _items = items;
         [self setBundle: bundle];
         [self setup];
+        [self setDelegate: nil];
     }
     return self;
 }
@@ -359,6 +362,10 @@ CGFloat const kApertureAngle = 53.0f;
     }    
     
     [CATransaction commit];
+    
+    if(delegate != nil && [delegate respondsToSelector: @selector(rosetteDidExpand:)]){
+        [delegate rosetteDidExpand: self];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,6 +417,10 @@ CGFloat const kApertureAngle = 53.0f;
     }    
     
     [CATransaction commit];
+    if(delegate != nil && [delegate respondsToSelector: @selector(rosetteDidFold:)]){
+        [delegate rosetteDidFold: self];
+    }
+
 }
 
 
