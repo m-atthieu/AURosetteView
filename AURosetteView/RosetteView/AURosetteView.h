@@ -37,7 +37,6 @@
 @property (nonatomic, assign, getter = isOn) BOOL on;
 
 - (id)initWithItems:(NSArray*)items;
-- (id) initWithItems: (NSArray*) items bundle: (NSBundle*) bundle;
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 - (void)toggleWithAnimation:(BOOL)animated;

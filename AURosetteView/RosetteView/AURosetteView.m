@@ -22,36 +22,20 @@
 @implementation AURosetteView
 @synthesize on = _on;
 @synthesize wheelButton = _wheelButton;
-@synthesize bundle = _bundle;
 @synthesize offImagePath = _offImagePath,
     onImagePath = _onImagePath,
     leafImagePath = _leafImagePath;
 @synthesize delegate;
 
-//#define kOnImageName @"/Bundle.bundle/Resources/rosetta_on.png"
-//#define kOffImageName @"/Bundle.bundle/Resources/rosetta_off.png"
-//#define kLeafImageName @"/Bundle.bundle/Resources/rosetta_leaf.png"
+#define kOnImageName @"/Bundle.bundle/Resources/rosetta_on.png"
+#define kOffImageName @"/Bundle.bundle/Resources/rosetta_off.png"
+#define kLeafImageName @"/Bundle.bundle/Resources/rosetta_leaf.png"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithItems: (NSArray*) items {
     self = [super initWithFrame: CGRectMake(0.0f, 0.0f, 199.0f, 199.0f)];
     if (self) {
         _items = items;
-        NSString* bundlePath = [[NSBundle mainBundle] pathForResource: @"Bundle" ofType: @"bundle"];
-        [self setBundle: [NSBundle bundleWithPath: bundlePath]];
-        [self setup];
-        [self setDelegate: nil];
-    }
-    return self;
-}
-
-- (id) initWithItems: (NSArray*) items bundle: (NSBundle*) bundle
-{
-    //self = [self initWithItems: items];
-    self = [super initWithFrame: CGRectMake(0.0f, 0.0f, 199.0f, 199.0f)];
-    if(self){
-        _items = items;
-        [self setBundle: bundle];
         [self setup];
         [self setDelegate: nil];
     }
@@ -94,7 +78,7 @@
 - (void) setupWheelButton
 {
     // get default off image
-    UIImage* image = [UIImage imageWithContentsOfFile: _offImagePath];
+    UIImage* image = [UIImage imageNamed: _offImagePath];
     // add button
     _wheelButton = [[UIButton alloc] init];
     [_wheelButton setImage:image forState: UIControlStateNormal];
@@ -106,9 +90,9 @@
 
 - (void) setupImages
 {
-    [self setOffImagePath: [_bundle pathForResource: @"rosetta_off" ofType: @"png"]];
-    [self setOnImagePath: [_bundle pathForResource: @"rosetta_on" ofType: @"png"]];
-    [self setLeafImagePath: [_bundle pathForResource: @"rosetta_leaf" ofType: @"png"]];
+    [self setOffImagePath: kOffImageName];
+    [self setOnImagePath: kOnImageName];
+    [self setLeafImagePath: kLeafImageName];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +113,7 @@
     
     if (_on) {
         // get default on image
-        UIImage* image = [UIImage imageWithContentsOfFile: _onImagePath];
+        UIImage* image = [UIImage imageNamed: _onImagePath];
         [_wheelButton setImage:image forState:UIControlStateNormal];
         
         // expand rosette
@@ -139,7 +123,7 @@
         _tapGestureRecognizer.enabled = YES;        
     } else {
         // get default off image
-        UIImage* image = [UIImage imageWithContentsOfFile: _offImagePath];
+        UIImage* image = [UIImage imageNamed: _offImagePath];
         [_wheelButton setImage:image forState:UIControlStateNormal];
         
         // fold rosette
@@ -236,7 +220,7 @@ CGFloat const kApertureAngle = 53.0f;
     // iterate all images
     [_items enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         // get image
-        UIImage *image = [UIImage imageWithContentsOfFile: _leafImagePath];
+        UIImage *image = [UIImage imageNamed: _leafImagePath];
         
         // create new layer
         CALayer* layer = [CALayer layer];
