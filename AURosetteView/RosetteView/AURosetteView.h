@@ -40,6 +40,8 @@
 
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 - (void)toggleWithAnimation:(BOOL)animated;
+- (void)addImages;
+- (void)addLeaves;
 @end
 
 @protocol AURosetteViewDelegate <NSObject>

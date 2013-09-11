@@ -202,7 +202,7 @@ CGFloat const kApertureAngle = 53.0f;
         imageLayer.anchorPoint = CGPointMake(0.5f, 0.5f);
         imageLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         imageLayer.transform = CATransform3DMakeScale(0.01f, 0.01f, 1.0f);
-        imageLayer.opacity = 0.6f;
+        imageLayer.opacity = 1.0f;
         
         [self.layer addSublayer:imageLayer];
         [_imagesLayers addObject:imageLayer];        
